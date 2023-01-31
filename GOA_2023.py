@@ -38,7 +38,7 @@ f_standard_year=2015
 
 iyear=1971 ; fyear=2022
 n_years=fyear-iyear+1
-fn='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/WGMS_compilation_GOA.csv'
+fn='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/output/WGMS_compilation_GOA.csv'
 WGMS_data = pd.read_csv(fn)
 
 fn='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/GRACE_Wouters/Wouters_MB_sorted_Canada_as_one.txt'
@@ -313,11 +313,10 @@ if do_composite:
                 figsubpath='GOA'
                 figname=region_name[region_index]
                 if ly == 'p':
-                    figpath='/Users/jason/Dropbox/AMAP/Arctic-multi-indicators/Figs/'+figsubpath+'/'
-                    figpath='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/Figs/'
+                    figpath='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/Figs/regional_results/'
                     os.system('mkdir -p '+figpath)
                     figname=figpath+figname+'.png'
-                    plt.savefig(figname, bbox_inches='tight', dpi=250)
+                    plt.savefig(figname, bbox_inches='tight', dpi=200)
                     # os.system('ls -lF '+figname) 
     #                    os.system('open '+figname) 
 

@@ -3,21 +3,18 @@
 """
 Created on Mon Jan 23 07:51:48 2023
 
-@author: jason
+@author: Jason Box
+
+updated Arctic land ice mass balance output after: Box, J. E., Colgan, W. T., Wouters, B., Burgess, D. O., O’Neel, S., Thomson, L. I., & Mernild, S. H. (2018). Global sea-level contribution from Arctic land ice: 1971–2017. Environmental Research Letters: ERL [Web Site], 13(12), 125012. https://doi.org/10.1088/1748-9326/aaf2ed
+
+The base data is from the WGMS compilation https://wgms.ch/data_databaseversions/ adding 'latest values' from https://wgms.ch/latest-glacier-mass-balance-data/
+
 """
 
-
-# import rasterio
-import glob
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-# from collections import Counter
-# import matplotlib.animation as animation
-import matplotlib as mpl 
-# from shapely import geometry
-# import geopandas as gpd
 
 
 fs=20
@@ -31,7 +28,6 @@ co=0.9; plt.rcParams['grid.color'] = (co,co,co)
 plt.rcParams["font.size"] = fs
 plt.rcParams['legend.fontsize'] = fs*0.8
 plt.rcParams['mathtext.default'] = 'regular'
-
 
 
 fn='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/DOI-WGMS-FoG-2022-09/data/glacier.csv'
@@ -54,19 +50,9 @@ fn='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/glaciers.csv'
 glaciers=pd.read_csv(fn,names=['name','region'])
 gl=[]
 for i in glaciers.name:
-    # print(i)
     name=i.upper()
     gl.append(name)
-    # v=info.NAME==name
-    
-    # print(name,lat[len(lat)])
 
-    # print(df.NAME[v[0]])#,df.POLITICAL_UNIT[v[0]],df.WGMS_ID[v[0]])
-
-# gl´np.a
-
-
-# v=((df.NAME=="DEVON ICE CAP NW") & (df["BALANCE_CODE"]=='BA'))
 iyear=1971 ; fyear=2022 ; n_years=fyear-iyear+1
 years_int=np.arange(iyear,fyear+1).astype(int)
 years=np.arange(iyear,fyear+1).astype(str)
@@ -254,7 +240,7 @@ for i,glacier in enumerate(gl):
         df_all=df_all.merge(output,on='year')
 # print(df_all)
 # #%%
-        do_plot=0
+        do_plot=1
         if do_plot:
             plt.close()
             fig, ax = plt.subplots(figsize=(10.5,10))
@@ -287,11 +273,11 @@ for i,glacier in enumerate(gl):
             ly='p'
             if ly == 'x':plt.show()
             
-            fig_path='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/Figs/'
+            fig_path='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/Figs/individual_glaciers/'
             if ly == 'p':
-                plt.savefig(fig_path+glacier+nam+'.png', bbox_inches='tight', dpi=200)
+                plt.savefig(fig_path+glacier+nam+'.png', bbox_inches='tight', dpi=150)
                 # if plt_eps:
                 #     plt.savefig(fig_path+site+'_'+str(i).zfill(2)+nam+'.eps', bbox_inches='tight')
 
 if wo:
-    df_all.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/WGMS_compilation_GOA.csv')
+    df_all.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/output/WGMS_compilation_GOA.csv')
