@@ -146,9 +146,6 @@ for k in range(n_glaciers):
             plt.legend()
 #%%
 
-ly='p'
-
-do_composite=1
 
 def RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev):
     # Russian-High-Arctic 2010 and 2017 −22 GT/y
@@ -189,13 +186,39 @@ def RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev):
     # print('Svalbard vs RHI slope',m)
 
     return composite_mb,composite_mb_stdev,cum
+
+def Greenland_MB(region_index,n_years,composite_mb,composite_mb_stdev):
+    # Greenland mass balance:
+    # Mankoff, Ken; Fettweis, Xavier; Solgaard, Anne; Langen, Peter; Stendel, Martin; Noël, Brice; van den Broeke, Michiel R.; Karlsson, Nanna; Box, Jason E.; Kjeldsen, Kristian, 2021, "Greenland ice sheet mass balance from 1840 through next week", https://doi.org/10.22008/FK2/OHI23Z, GEUS Dataverse, V449 
+    # Mankoff, K. D., Fettweis, X., Langen, P. L., Stendel, M., Kjeldsen, K. K., Karlsson, N. B., Noël, B., van den Broeke, M. R., Solgaard, A., Colgan, W., Box, J. E., Simonsen, S. B., King, M. D., Ahlstrøm, A. P., Andersen, S. B., and Fausto, R. S.: Greenland ice sheet mass balance from 1840 through next week, Earth Syst. Sci. Data, 13, 5001–5025, https://doi.org/10.5194/essd-13-5001-2021, 2021. doi: 10.5194/essd-13-5001-2021
+    fn='/Users/jason/Dropbox/TMB_Mankoff/MB_SMB_D_BMB_ann.csv'
+    df=pd.read_csv(fn)
+    
+    region_index=6 
+    
+    temp=0.
+    cum=np.zeros((n_years))*np.nan
+    for i in range(0, n_years):
+        v=np.where(df.time==i+iyear)
+        composite_mb[region_index,i]=df.MB[v[0]]
+        composite_mb_stdev[region_index,i]=df.MB_err[v[0]]
+        temp+=composite_mb[region_index,i]
+        cum[i]=temp
+
+    return composite_mb,composite_mb_stdev,cum
+
+
+ly='p'
+
+do_composite=1
+
 if do_composite:
 
     # n_col=1 ; n_row=6
     # fig, ax = plt.subplots(1, n_row)
     region_name=['Iceland','Svalbard','Russian-High-Arctic','Alaska','Arctic-Canada','Norway-Sweden','Greenland']
     n_regional_composites=len(region_name)
-    n_regional_composites-=1
+    # n_regional_composites-=1
     
     composite_mb=np.zeros((n_regional_composites, n_years))
     composite_mb_stdev=np.zeros((n_regional_composites, n_years))
@@ -240,21 +263,11 @@ if do_composite:
                 composite_mb_stdev[region_index,i]=np.nanstd(mb_scaled_all[v[0],i])
                 temp+=composite_mb[region_index,i]
             cum[i]=temp
-        if region_index==2: #RHI
+        if region_index==2: # RHI
             composite_mb,composite_mb_stdev,cum=RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev)
-    # else:
-    #     df=pd.read_csv('/Users/jason/Dropbox/TMB_Mankoff/dataverse_files/MB_SMB_D_BMB_ann.csv')
-    #     print(df.columns)
-    #     df.drop(df[df.time < 1971].index, inplace=True)
-    #     df.reset_index(drop=True, inplace=True)
+        if region_index==6: # Greenland
+            composite_mb,composite_mb_stdev,cum=Greenland_MB(region_index,n_years,composite_mb,composite_mb_stdev)
 
-    #     temp=0.
-    #     cum=np.zeros((n_years))
-    #     for i in range(0, n_years):
-    #         temp+=df.MB[i]
-    #         cum[i]=temp
-    #     if region_index==0:
-    #         cum[0:15]=np.nan
         df_regional_cumulative[region_name[region_index]]=pd.Series(cum)
         df_regional_annual[region_name[region_index]]=pd.Series(composite_mb[region_index,:])
         df_regional_std[region_name[region_index]]=pd.Series(composite_mb_stdev[region_index,:])
@@ -275,12 +288,17 @@ if do_composite:
                 plt.ylim(-3.2e11,4e10)
             if region_index==4: # Arctic-Canada
                 plt.ylim(-1.38e12,15e10)
+            if region_index==6: # Greenland
+                plt.ylim(-6e12,15e10)
             plt.ylabel('metric tons')
     #                plt.ax.yaxis.set_major_formatter(FormatStrFormatter('%18.0f'))
             ax.yaxis.set_major_formatter(mpl.ticker.StrMethodFormatter('{x:,.0f}'))
     #                plt.gca().get_yaxis().get_major_formatter().set_useOffset(False)
     #                ax.ticklabel_format(useOffset=False)
-            ax.legend()
+            # plt.legend(alpha=1)
+            legend = plt.legend(loc="upper right", edgecolor="grey")
+            legend.get_frame().set_alpha(1)
+            # legend.get_frame().set_facecolor((0, 0, 1, 0.1))
             
             mult=0.7
             props = dict(boxstyle='round', facecolor='w', alpha=1,edgecolor='w')
@@ -289,6 +307,7 @@ if do_composite:
             txt='after: Global sea-level contribution from Arctic land ice: 1971–2017,\nEnvironmental Research Letters,\nBox, JE, WT Colgan, B Wouters, DO Burgess, S O’Neel, LI Thomson, SH Mernild 2018. \n...updated by 5 years: 2018 to 2022, @Climate_Ice and @AMAP_Arctic'
             yy0=0.02
             if region_name[region_index]=='Greenland':
+                mult=0.59
                 txt='after Mankoff, K. D., Fettweis, X., Langen, P. L., Stendel, M., Kjeldsen, K. K., Karlsson, N. B.,\nNoël, B., van den Broeke, M. R., Solgaard, A., Colgan, W., Box, J. E., Simonsen, S. B., King M. D.,\nAhlstrøm, A. P., Andersen, S. B., and Fausto, R. S.:\nGreenland ice sheet mass balance from 1840 through next week, Earth Syst. Sci. Data, 13, 5001–5025,\nhttps://doi.org/10.5194/essd-13-5001-2021, 2021. doi: 10.5194/essd-13-5001-2021'
                 yy0=0.04
     #                ax.text(0.02, 0.2,
@@ -298,7 +317,7 @@ if do_composite:
     #                        rotation_mode="anchor")
             xx0=0.02 ; dy=-0.05 ; cc=0
     #                color_code='#6AD8EA'
-            co=0.6
+            co=0.5
             
             if do_plot_1:
                 plt.text(xx0, yy0+cc*dy, txt,fontsize=fs*mult,color=(co,co,co),transform=ax.transAxes, bbox=props) ; cc+=1.
@@ -331,80 +350,8 @@ if wo:
                                   index=False, float_format="%.2f")
     df_regional_std.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/output/GOA_regional_std_1971-2022.csv',
                                   index=False, float_format="%.2f")
+# do_gif=1
 
-#%%
-composite_mb[4][composite_mb[4]==0]=np.nan
-
-canada=composite_mb[4]
-year=np.arange(1971,2022)
-
-print(np.nanmean(canada[year>2000]))
-#%%
-do_gif=1
-
-if do_gif:
-    figpath='/Users/jason/Dropbox/AMAP/Arctic-multi-indicators/Figs/GOA/'
-    os.system('/usr/local/bin/convert -delay 250 -loop 0 '+figpath+'*v2.png '+figpath+'anim_v2.gif')
-
-#%%
-
-# import xarray as xr
-# ds = xr.open_dataset('/Users/jason/Dropbox/TMB_Mankoff/dataverse_files/MB_region.nc')
-# print(ds)
-
-
-df=pd.read_csv('/Users/jason/Dropbox/TMB_Mankoff/dataverse_files/MB_SMB_D_BMB_ann.csv')
-print(df.columns)
-
-df['date']=pd.to_datetime(df['time'], format='%Y-%m-%d')
-df["year"]=pd.DatetimeIndex(df['date']).year
-# print(df.year)
-
-iyear=1986 ; fyear=2021 ; n_years=fyear-iyear+1
-years=np.arange(1986,2022)
-
-TMB_Mankoff=np.zeros(n_years)
-for i in range(0,n_years):
-    TMB_Mankoff[i]=sum(df.mb[df.year==i+1986])
-    print(i+1986,TMB_Mankoff[i])
-
-
-
-#%%
-fn='/Users/jason/Dropbox/AMAP/Arctic-multi-indicators/data_multi_indicators/glaciers/Greenland MB 1971-2019 multiple sources_updated.xlsx'
-dfG = pd.read_excel(fn)
-# print(dfG)
-
-fn='/Users/jason/Dropbox/AMAP/Arctic-multi-indicators/data_multi_indicators/glaciers/Box_et_al_2018_ERL_Arctic_glacier_mass_balance.xlsx'
-dfx = pd.read_excel(fn)
-print(dfx.columns)
-
-ofile='/Users/jason/Dropbox/AMAP/Arctic-multi-indicators/data_multi_indicators/glaciers/glaciers_MB_1971-2020_after_Box_et_al_2018.csv'
-
-composite_mb[composite_mb==0]=np.nan
-composite_mb_stdev[composite_mb_stdev==0]=np.nan
-
-composite_mb
-
-a=np.zeros((7+1+7,50))
-a[1:8,:]=composite_mb
-a[3,:]=dfx.iloc[:,13]
-a[7,:]=dfG.iloc[:,1]
-a[8:15,:]=composite_mb_stdev
-a[14,:]=dfG.iloc[:,2]
-a[10,:]=dfx.iloc[:,14]
-a[0,:]=year
-
-a[3,-3:]=np.mean(a[3,-9:-4])
-a[4,-1:]=np.mean(a[4,-7:-2])
-a[5,-1:]=np.mean(a[5,-7:-2])
-
-header=['Year','Iceland','Svalbard','Russia','Alaska','Arctic Canada','Norway Sweden','Greenland','Iceland stdev','Svalbard stdev','Russia stdev','Alaska stdev','Arctic Canada stdev','Norway Sweden stdev','Greenland stdev']
-print(len(header))
-df = pd.DataFrame(data=a.T)
-df. columns=header
-# df['Year'] = year.toarray().tolist()
-# print(dff')
-
-df.to_csv(ofile, float_format='%.2f',header=['Year','Iceland','Svalbard','Russia','Alaska','Arctic Canada','Norway Sweden','Greenland','Iceland stdev','Svalbard stdev','Russia stdev','Alaska stdev','Arctic Canada stdev','Norway Sweden stdev','Greenland stdev'])
-
+# if do_gif:
+#     figpath='/Users/jason/Dropbox/AMAP/Arctic-multi-indicators/Figs/GOA/'
+#     os.system('/usr/local/bin/convert -delay 250 -loop 0 '+figpath+'*v2.png '+figpath+'anim_v2.gif')
