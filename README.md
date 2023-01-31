@@ -1,4 +1,4 @@
-# GOA-2023
+# Glacirs of the Arctic (GOA) 2023
 updated Arctic land ice mass balance output after:
 Box, J. E., Colgan, W. T., Wouters, B., Burgess, D. O., O’Neel, S., Thomson, L. I., & Mernild, S. H. (2018). Global sea-level contribution from Arctic land ice: 1971–2017. Environmental Research Letters: ERL [Web Site], 13(12), 125012. https://doi.org/10.1088/1748-9326/aaf2ed 
 
