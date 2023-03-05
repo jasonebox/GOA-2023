@@ -53,6 +53,8 @@ for i in glaciers.name:
     name=i.upper()
     gl.append(name)
 
+print(gl)
+#%%
 iyear=1971 ; fyear=2022 ; n_years=fyear-iyear+1
 years_int=np.arange(iyear,fyear+1).astype(int)
 years=np.arange(iyear,fyear+1).astype(str)
@@ -65,6 +67,8 @@ for i,glacier in enumerate(gl):
     # if i==0:
     # if glacier=='DEVON ICE CAP NW':
     # if glacier=='STORGLACIAEREN':
+    # if glacier=='WHITE':
+
     if glacier!='null':
         v2=info.NAME==name
         v=np.where(GLACIER.NAME==glacier)
@@ -85,15 +89,7 @@ for i,glacier in enumerate(gl):
         
         for yy in range(n_years):
             v=((df.NAME==glacier) & (df.YEAR==yy+iyear) &  (df.UPPER_BOUND==9999))
-            # print(yy+iyear,sum(v))
-            if glacier=='DEVON ICE CAP NW' and yy+iyear==2021:
-                MB[yy]=-5/1000
-                temp+=MB[yy]
-                MB_cum[yy]=temp                
-            if glacier=='DEVON ICE CAP NW' and yy+iyear==2022:
-                MB[yy]=-576/1000
-                temp+=MB[yy]
-                MB_cum[yy]=temp      
+            # print(yy+iyear,sum(v))  
             if glacier=='AUSTRE BROEGGERBREEN' and yy+iyear==2022:
                 MB[yy]=-1393/1000
                 temp+=MB[yy]
@@ -222,15 +218,50 @@ for i,glacier in enumerate(gl):
                  MB[yy]=-1180/1000
                  temp+=MB[yy]
                  MB_cum[yy]=temp 
+            if glacier=='DEVON ICE CAP NW' and yy+iyear==2021:
+                MB[yy]=-5/1000
+                temp+=MB[yy]
+                MB_cum[yy]=temp                
+            if glacier=='DEVON ICE CAP NW' and yy+iyear==2022:
+                MB[yy]=-576/1000
+                temp+=MB[yy]
+                MB_cum[yy]=temp    
+            if glacier=='MEIGHEN ICE CAP' and yy+iyear==2021:
+                 MB[yy]=-131/1000
+                 temp+=MB[yy]
+                 MB_cum[yy]=temp 
             if glacier=='MEIGHEN ICE CAP' and yy+iyear==2022:
                  MB[yy]=-762/1000
+                 temp+=MB[yy]
+                 MB_cum[yy]=temp 
+            if glacier=='MELVILLE SOUTH ICE CAP' and yy+iyear==2021:
+                 MB[yy]=122/1000
+                 temp+=MB[yy]
+                 MB_cum[yy]=temp 
+            if glacier=='MELVILLE SOUTH ICE CAP' and yy+iyear==2022:
+                 MB[yy]=-1075/1000
+                 temp+=MB[yy]
+                 MB_cum[yy]=temp 
+# 2019:     B = -799 mm w.e.             ELA = 1326          AAR = 0.28
+# 2020:     B = -553 mm w.e.             ELA = 1344          AAR = 0.24
+# 2021:     B = -107 mm w.e.             ELA = 1083          AAR = 0.61
+            if glacier=='WHITE' and yy+iyear==2019:
+                 MB[yy]=-799/1000
+                 temp+=MB[yy]
+                 MB_cum[yy]=temp 
+            if glacier=='WHITE' and yy+iyear==2020:
+                 MB[yy]=-553/1000
+                 temp+=MB[yy]
+                 MB_cum[yy]=temp 
+            if glacier=='WHITE' and yy+iyear==2021:
+                 MB[yy]=-107/1000
                  temp+=MB[yy]
                  MB_cum[yy]=temp 
             if sum(v)>0:
                 MB[yy]=df.ANNUAL_BALANCE[v]/1000
                 temp+=MB[yy]
                 MB_cum[yy]=temp
-        print(glacier,yy+iyear,sum(v),MB[yy])
+            # print(glacier,yy+iyear,sum(v),MB[yy])
         
         MBx=MB.copy()
         MBx*=1000
@@ -239,7 +270,7 @@ for i,glacier in enumerate(gl):
         output=pd.DataFrame({'year':years_int,glacier:MBx})
         df_all=df_all.merge(output,on='year')
 # print(df_all)
-# #%%
+
         do_plot=1
         if do_plot:
             plt.close()
@@ -273,11 +304,11 @@ for i,glacier in enumerate(gl):
             ly='p'
             if ly == 'x':plt.show()
             
-            fig_path='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/Figs/individual_glaciers/'
+            figpath='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/Figs/individual_glaciers/'
             if ly == 'p':
-                plt.savefig(fig_path+glacier+nam+'.png', bbox_inches='tight', dpi=150)
+                plt.savefig(figpath+glacier+nam+'.png', bbox_inches='tight', dpi=150)
                 # if plt_eps:
-                #     plt.savefig(fig_path+site+'_'+str(i).zfill(2)+nam+'.eps', bbox_inches='tight')
+                #     plt.savefig(figpath+site+'_'+str(i).zfill(2)+nam+'.eps', bbox_inches='tight')
 
 if wo:
     df_all.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/output/WGMS_compilation_GOA.csv')

@@ -12,6 +12,10 @@ import numpy as np
 #from numpy.polynomial.polynomial import polyfit
 from matplotlib.ticker import FormatStrFormatter
 import matplotlib as mpl
+from datetime import date
+
+today = date.today()
+versionx= today.strftime('%Y%m%d')
 
 fs=22
 
@@ -144,7 +148,7 @@ for k in range(n_glaciers):
             plt.subplot(n_row, n_col, 3)
             plt.plot(year,cum,'.',c=(0.6, 0.0, 0.),label='cumulative')
             plt.legend()
-#%%
+
 
 
 def RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev):
@@ -304,12 +308,12 @@ if do_composite:
             props = dict(boxstyle='round', facecolor='w', alpha=1,edgecolor='w')
             txt='Arctic Monitoring and Assessment Program (AMAP), after Box et al 2018 ERL'
             txt='Box, J.E., W.T. Colgan, B. Wouters, D.O. Burgess, S. O’Neel, L.I. Thomson, S.H. Mernild 2018. Global sea-level contribution from Arctic land ice: 1971–2017, Environmental Research Letters, ERL-105795, https://doi.org/10.1088/1748-9326/aaf2ed, updated 5 years'
-            txt='after: Global sea-level contribution from Arctic land ice: 1971–2017,\nEnvironmental Research Letters,\nBox, JE, WT Colgan, B Wouters, DO Burgess, S O’Neel, LI Thomson, SH Mernild 2018. \n...updated by 5 years: 2018 to 2022, @Climate_Ice and @AMAP_Arctic'
+            txt='after: Global sea-level contribution from Arctic land ice: 1971–2017,\nEnvironmental Research Letters,\nBox, JE, WT Colgan, B Wouters, DO Burgess, S O’Neel, LI Thomson, SH Mernild 2018. \n...updated by 5 years: 2018 to 2022\n@Climate_Ice and @AMAP_Arctic, ver. '+versionx
             yy0=0.02
             if region_name[region_index]=='Greenland':
                 mult=0.59
-                txt='after Mankoff, K. D., Fettweis, X., Langen, P. L., Stendel, M., Kjeldsen, K. K., Karlsson, N. B.,\nNoël, B., van den Broeke, M. R., Solgaard, A., Colgan, W., Box, J. E., Simonsen, S. B., King M. D.,\nAhlstrøm, A. P., Andersen, S. B., and Fausto, R. S.:\nGreenland ice sheet mass balance from 1840 through next week, Earth Syst. Sci. Data, 13, 5001–5025,\nhttps://doi.org/10.5194/essd-13-5001-2021, 2021. doi: 10.5194/essd-13-5001-2021'
-                yy0=0.04
+                txt='after Mankoff, K. D., Fettweis, X., Langen, P. L., Stendel, M., Kjeldsen, K. K., Karlsson, N. B.,\nNoël, B., van den Broeke, M. R., Solgaard, A., Colgan, W., Box, J. E., Simonsen, S. B., King M. D.,\nAhlstrøm, A. P., Andersen, S. B., and Fausto, R. S.:\nGreenland ice sheet mass balance from 1840 through next week, Earth Syst. Sci. Data, 13, 5001–5025,\nhttps://doi.org/10.5194/essd-13-5001-2021, 2021. doi: 10.5194/essd-13-5001-2021\n@Climate_Ice ver. '+versionx
+                yy0=0.02
     #                ax.text(0.02, 0.2,
     #                        txt,
     #                        transform=ax.transAxes, fontsize=fs*mult,
@@ -335,7 +339,7 @@ if do_composite:
                     figpath='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/Figs/regional_results/'
                     os.system('mkdir -p '+figpath)
                     figname=figpath+figname+'.png'
-                    plt.savefig(figname, bbox_inches='tight', dpi=200)
+                    plt.savefig(figname, bbox_inches='tight', dpi=100)
                     # os.system('ls -lF '+figname) 
     #                    os.system('open '+figname) 
 
