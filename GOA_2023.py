@@ -84,16 +84,19 @@ for k in range(1,n_glaciers+1):
 
 x=iceland_glaciersx ; x.insert(0,'year')
 WGMS_data_regional_selection=WGMS_data[x]
-WGMS_data_regional_selection.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/Iceland_glaciers_annual_mass_balance_WGMS_1971-2022.csv')
+wo=0
+if wo:
+    WGMS_data_regional_selection.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/Iceland_glaciers_annual_mass_balance_WGMS_1971-2022.csv')
 
 x=ArcticCanada_glaciers ; x.insert(0,'year')
 WGMS_data_regional_selection=WGMS_data[x]
-WGMS_data_regional_selection.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/Arctic-Canada_glaciers_annual_mass_balance_WGMS_1971-2022.csv')
+if wo:
+    WGMS_data_regional_selection.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/data/Arctic-Canada_glaciers_annual_mass_balance_WGMS_1971-2022.csv')
 #%% obtain regionally scaled mass balance
 
 year=np.arange(iyear, fyear+1)
 
-do_plot_1=1
+do_plot_1=0
 
 if do_plot_1:
     plt.close()
@@ -151,7 +154,7 @@ for k in range(n_glaciers):
 
 
 
-def RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev):
+def RHI_MB(region_index,region_name,n_years,composite_mb,composite_mb_stdev):
     # Russian-High-Arctic 2010 and 2017 −22 GT/y
     # Sommer, C., Seehaus, T., Glazovsky, A., and Braun, M. H.: Brief communication: Increased glacier mass loss in the Russian High Arctic (2010–2017), The Cryosphere, 16, 35–42, https://doi.org/10.5194/tc-16-35-2022, 2022.
     
@@ -160,12 +163,14 @@ def RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev):
     region_index=2 #RHI
     region_index_svalbard=1
     
-    Svalbard_vs_RHI_slope=0.18672458037678966
-    annual_rate=-22/(2017-2010)
-    annual_std=6/(2017-2010)
+    Svalbard_vs_RHI_slope=1/0.18672458037678966
+    Svalbard_vs_RHI_slope=1.1235765517520224
+    annual_rate=-22#/(2017-2010)
+    annual_std=6#/(2017-2010)
     
     temp=0.
     cum=np.zeros((n_years))*np.nan
+    print('RHI function',region_name[region_index])
     for i in range(0, n_years):
         if ((i+iyear>=2010)&(i+iyear<=2017)):
             composite_mb[region_index,i]=annual_rate
@@ -179,17 +184,19 @@ def RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev):
             cum[i]=temp        
     
     # v=np.where((year>=2010)&(year<=2017))
-    # v=np.where((year>=iyear)&(year<=fyear))
-    # plt.plot(year[v[0]],cum[v[0]])
-    # x=df_regional_cumulative['Svalbard'][v[0]]-df_regional_cumulative['Svalbard'][v[0][0]]
+    v=np.where((year>=iyear)&(year<=fyear))
+    plt.plot(year[v[0]],cum[v[0]],label=region_name[region_index])
+    plt.legend()
+    x=df_regional_cumulative['Svalbard'][v[0]]-df_regional_cumulative['Svalbard'][v[0][0]]
     
-    # plt.plot(year[v],x)
+    plt.plot(year[v],x,label='Svalbard')
     
-    # b, m = polyfit(x,cum[v], 1)
+    b, m = polyfit(x,cum[v], 1)
     
-    # print('Svalbard vs RHI slope',m)
+    print('Svalbard vs RHI slope',m)
 
     return composite_mb,composite_mb_stdev,cum
+
 
 def Greenland_MB(region_index,n_years,composite_mb,composite_mb_stdev):
     # Greenland mass balance:
@@ -212,7 +219,7 @@ def Greenland_MB(region_index,n_years,composite_mb,composite_mb_stdev):
     return composite_mb,composite_mb_stdev,cum
 
 
-ly='p'
+ly='x'
 
 do_composite=1
 
@@ -268,13 +275,20 @@ if do_composite:
                 temp+=composite_mb[region_index,i]
             cum[i]=temp
         if region_index==2: # RHI
-            composite_mb,composite_mb_stdev,cum=RHI_MB(region_index,n_years,composite_mb,composite_mb_stdev)
+            composite_mb,composite_mb_stdev,cum=RHI_MB(region_index,region_name,n_years,composite_mb,composite_mb_stdev)
         if region_index==6: # Greenland
             composite_mb,composite_mb_stdev,cum=Greenland_MB(region_index,n_years,composite_mb,composite_mb_stdev)
 
+        composite_mb_stdev[region_index,:][composite_mb_stdev[region_index,:]==0]=np.nan
+        composite_mb[region_index,:][composite_mb[region_index,:]==0]=np.nan
+
+        out=pd.DataFrame({"year":year,"mass_balance":composite_mb[region_index,:],'uncertainty_mass_balance':composite_mb_stdev[region_index,:]})
         df_regional_cumulative[region_name[region_index]]=pd.Series(cum)
         df_regional_annual[region_name[region_index]]=pd.Series(composite_mb[region_index,:])
         df_regional_std[region_name[region_index]]=pd.Series(composite_mb_stdev[region_index,:])
+        out.to_csv(
+            '/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/output/ArcticInSituvGRACE_'+region_name[region_index]+'_mass_balance_1971-2022.csv',
+                                      index=False, float_format="%.2f")
         cum*=1e9 # put in kg
         if do_plot_1:
             plt.close()
