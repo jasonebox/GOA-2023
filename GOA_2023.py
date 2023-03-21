@@ -227,7 +227,7 @@ if do_composite:
 
     # n_col=1 ; n_row=6
     # fig, ax = plt.subplots(1, n_row)
-    region_name=['Iceland','Svalbard','Russian-High-Arctic','Alaska','Arctic-Canada','Norway-Sweden','Greenland']
+    region_name=['Iceland','Svalbard','Russian-Arctic','Alaska','Arctic-Canada','Scandinavia','Greenland']
     n_regional_composites=len(region_name)
     # n_regional_composites-=1
     
@@ -235,7 +235,7 @@ if do_composite:
     composite_mb_stdev=np.zeros((n_regional_composites, n_years))
 
     # ------------------------------------------------------------------------- 
-    columns=['year', 'Iceland','Svalbard','Russian-High-Arctic','Alaska','Arctic-Canada','Norway-Sweden','Greenland']
+    columns=['year', 'Iceland','Svalbard','Russian-Arctic','Alaska','Arctic-Canada','Scandinavia','Greenland']
     df_regional_cumulative = pd.DataFrame(columns = columns) 
     df_regional_annual = pd.DataFrame(columns = columns)
     df_regional_std = pd.DataFrame(columns = columns)
