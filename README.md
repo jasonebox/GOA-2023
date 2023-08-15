@@ -46,5 +46,6 @@ The approach could be updated by making regressions vs regional z-scores and a l
 
 ## Greenland
 Greenland mass balance is from:
-Mankoff, Ken; Fettweis, Xavier; Solgaard, Anne; Langen, Peter; Stendel, Martin; Noël, Brice; van den Broeke, Michiel R.; Karlsson, Nanna; Box, Jason E.; Kjeldsen, Kristian, 2021, "Greenland ice sheet mass balance from 1840 through next week", https://doi.org/10.22008/FK2/OHI23Z, GEUS Dataverse, V449
+
+  Mankoff, Ken; Fettweis, Xavier; Solgaard, Anne; Langen, Peter; Stendel, Martin; Noël, Brice; van den Broeke, Michiel R.; Karlsson, Nanna; Box, Jason E.; Kjeldsen, Kristian, 2021, "Greenland ice sheet mass balance from 1840 through next week", https://doi.org/10.22008/FK2/OHI23Z, GEUS Dataverse, V449
 Mankoff, K. D., Fettweis, X., Langen, P. L., Stendel, M., Kjeldsen, K. K., Karlsson, N. B., Noël, B., van den Broeke, M. R., Solgaard, A., Colgan, W., Box, J. E., Simonsen, S. B., King, M. D., Ahlstrøm, A. P., Andersen, S. B., and Fausto, R. S.: Greenland ice sheet mass balance from 1840 through next week, Earth Syst. Sci. Data, 13, 5001–5025, https://doi.org/10.5194/essd-13-5001-2021, 2021. doi: 10.5194/essd-13-5001-2021
