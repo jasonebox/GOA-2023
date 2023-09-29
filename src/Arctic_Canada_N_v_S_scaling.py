@@ -64,16 +64,17 @@ print(N/S)
 #%%
 
 fn='/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/output/ArcticInSituvGRACE_Arctic-Canada_mass_balance_1971-2022.csv'
+os.system('ls -lF '+fn)
 AC=pd.read_csv(fn)
 
 ACN_scaled=AC.copy()
 ACS_scaled=AC.copy()
 
-ACN_scaled.mass_balance=AC.mass_balance*(1-N_S_ratio)
-ACS_scaled.mass_balance=AC.mass_balance*N_S_ratio
+ACN_scaled.mass_balance=AC.mass_balance/2*N_S_ratio
+ACS_scaled.mass_balance=AC.mass_balance/2/N_S_ratio
 
-ACN_scaled.uncertainty_mass_balance=AC.uncertainty_mass_balance*(1-N_S_ratio)
-ACS_scaled.uncertainty_mass_balance=AC.uncertainty_mass_balance*N_S_ratio
+ACN_scaled.uncertainty_mass_balance=AC.uncertainty_mass_balance*N_S_ratio
+ACS_scaled.uncertainty_mass_balance=AC.uncertainty_mass_balance/N_S_ratio
 
 ACN_scaled.to_csv('/Users/jason/Dropbox/Glaciers_of_the_Arctic/GOA-2023/output/ArcticInSituvGRACE_Arctic-Canada-North_mass_balance_1971-2022.csv',
                               index=False, float_format="%.2f")
