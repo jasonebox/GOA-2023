@@ -44,7 +44,7 @@ In Bert's GLAMBIE version of data, I am finding that ACN loses ice faster than A
 
 What I submitted to GLAMBIE a few months ago was in error. That scaling had ACS > ACN and by a factor of 1.52! My error was in estimating 2002-2015 mass balance average from annual hydrologic years that unlike a multi-month fit line (below) are quite sensitive to successive September to September hydrological year determinations. Further, in my too clever hydrological year determinations, I had employed gap-filling. Much more robust is obtaining the trend from the linear fit.
 
-So, now I assign a regional scaling according to the latest Bert GRACE data; ACN loses ice faster than ACS by 'only' a factor of 1.065x. I already applied that in 
+So, now I assign a regional scaling according to the latest Bert GRACE data; ACN loses ice faster than ACS by 'only' a factor of 1.065x. I already applied that after [this code](src/Arctic_Canada_N_v_S_scaling.py)
 
 ![image](https://github.com/jasonebox/GOA-2023/assets/32133350/50896ad6-aff7-4433-be11-4be0ce548dc0)
 
